@@ -1,0 +1,38 @@
+version: "3.9"
+
+services:
+  db:
+    image: postgres:17
+    container_name: autoparts-db
+    restart: always
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: 1234
+      POSTGRES_DB: autoparts
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - autoparts-net
+
+  api:
+    build: .
+    container_name: autoparts-api
+    restart: always
+    depends_on:
+      - db
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./app:/app/app
+    environment:
+      DATABASE_URL: postgresql+asyncpg://admin:1234@db:5432/autoparts
+    networks:
+      - autoparts-net
+
+volumes:
+  postgres_data:
+
+networks:
+  autoparts-net:
