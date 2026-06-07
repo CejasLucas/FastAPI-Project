@@ -11,6 +11,7 @@ def to_domain(model: ProductModel) -> Product:
         minimum_stock=model.minimum_stock,
         last_purchase_price=model.last_purchase_price,
         unit=model.unit,
+        brand_id=model.brand_id,
         category_id=model.category_id,
         uploaded_at=model.uploaded_at
     )
@@ -26,6 +27,7 @@ def to_model(entity: Product) -> ProductModel:
         minimum_stock=entity.minimum_stock,
         last_purchase_price=entity.last_purchase_price,
         unit=entity.unit,
+        brand_id=entity.brand_id,
         category_id=entity.category_id,
         uploaded_at=entity.uploaded_at
     )

@@ -1,7 +1,7 @@
 from uuid import UUID
 from decimal import Decimal
 from datetime import datetime
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 
 
 @dataclass
@@ -16,7 +16,7 @@ class PurchaseItem:
 
     unit_price: Decimal = Decimal("0.00")
 
-    uploaded_at: datetime | None = None
+    uploaded_at: datetime = field(default_factory=datetime.now)
 
     @property
     def subtotal(self) -> Decimal:

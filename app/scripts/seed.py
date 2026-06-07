@@ -1,124 +1,118 @@
 import asyncio
-from datetime import datetime
 from decimal import Decimal
-
 from app.infrastructure.database.session import SessionLocal
 
-from app.domain.enums.pruduct_unit import Unit
-from app.domain.enums.purchase_status import PurchaseStatus
-from app.domain.enums.stock_movement_type import StockMovementType
-from app.domain.enums.stock_movement_reference_type import StockMovementReferenceType
-
-from app.domain.entities.category import Category
-from app.domain.entities.document import Document
-from app.domain.entities.product import Product
-from app.domain.entities.supplier import Supplier
-from app.domain.entities.purchase import Purchase
-from app.domain.entities.purchase_item import PurchaseItem
-from app.domain.entities.stock_movement import StockMovement
-
+from app.infrastructure.repositories.brand_repository import SqlAlchemyBrandRepository
+from app.infrastructure.repositories.supplier_repository import SqlAlchemySupplierRepository
 from app.infrastructure.repositories.category_repository import SqlAlchemyCategoryRepository
-from app.infrastructure.repositories.document_repository import SqlAlchemyDocumentRepository
 from app.infrastructure.repositories.product_repository import SqlAlchemyProductRepository
 from app.infrastructure.repositories.purchase_repository import SqlAlchemyPurchaseRepository
 from app.infrastructure.repositories.purchase_item_repository import SqlAlchemyPurchaseItemRepository
-from app.infrastructure.repositories.supplier_repository import SqlAlchemySupplierRepository
+from app.infrastructure.repositories.document_repository import SqlAlchemyDocumentRepository
 from app.infrastructure.repositories.stock_movement_repository import SqlAlchemyStockMovementRepository
 
+from app.scripts.seeders.brand_seeder import build_brands
+from app.scripts.seeders.supplier_seeder import build_suppliers
+from app.scripts.seeders.category_seeder import build_categories
+from app.scripts.seeders.product_seeder import build_products
+from app.scripts.seeders.purchase_seeder import build_purchases
+from app.scripts.seeders.purchase_item_seeder import build_purchase_items
+from app.scripts.seeders.document_seeder import build_documents
+from app.scripts.seeders.stock_movement_seeder import build_stock_movements
+
+
+async def persist_entities(entities, create_fn):
+    return [await create_fn(e) for e in entities]
+
+
+def calculate_purchase_total(items):
+    return sum(Decimal(item.quantity) * item.unit_price for item in items)
 
 
 async def seed():
-
     async with SessionLocal() as db:
 
-        repo_supplier = SqlAlchemySupplierRepository(db)
-        repo_category = SqlAlchemyCategoryRepository(db)
-        repo_product = SqlAlchemyProductRepository(db)
-        repo_document = SqlAlchemyDocumentRepository(db)
-        repo_purchase = SqlAlchemyPurchaseRepository(db)
-        repo_purchase_item = SqlAlchemyPurchaseItemRepository(db)
-        repo_stock = SqlAlchemyStockMovementRepository(db)
+        brand_repo = SqlAlchemyBrandRepository(db)
+        supplier_repo = SqlAlchemySupplierRepository(db)
+        category_repo = SqlAlchemyCategoryRepository(db)
+        product_repo = SqlAlchemyProductRepository(db)
+        purchase_repo = SqlAlchemyPurchaseRepository(db)
+        purchase_item_repo = SqlAlchemyPurchaseItemRepository(db)
+        document_repo = SqlAlchemyDocumentRepository(db)
+        stock_repo = SqlAlchemyStockMovementRepository(db)
 
         try:
-            # ---------------- SUPPLIER ----------------
-            supplier = await repo_supplier.create(
-                Supplier(
-                    name="Pirelli Argentina",
-                    email="contacto@pirelli.com",
-                    phone="123456789",
-                    tax_id="30-45684512-4"
-                )
-            )
+            print("Seeding suppliers...")
+            suppliers = await persist_entities(build_suppliers(), supplier_repo.create)
+            supplier_map = {s.name: s for s in suppliers}
+            print(f"{len(suppliers)} suppliers created")
 
-            # ---------------- CATEGORY ----------------
-            category = await repo_category.create(
-                Category(
-                    name="Filtros",
-                    description="Componentes de filtrado para motor"
-                )
-            )
+            print("Seeding brands...")
+            brands = await persist_entities(build_brands(), brand_repo.create)
+            brand_map = {b.name: b for b in brands}
+            print(f"{len(brands)} brands created")
 
-            # ---------------- PRODUCT ----------------
-            product = await repo_product.create(
-                Product(
-                    sku="FILT-001",
-                    name="Filtro de aceite Pirelli",
-                    description="Filtro de alto rendimiento",
-                    current_stock=0,
-                    minimum_stock=10,
-                    last_purchase_price=10000.0,
-                    unit=Unit.UNIT,
-                    category_id=category.id
-                )
-            )
+            print("Seeding categories...")
+            categories = await persist_entities(build_categories(), category_repo.create)
+            category_map = {c.name: c for c in categories}
+            print(f"{len(categories)} categories created")
 
-            # ---------------- PURCHASE ----------------
-            purchase = await repo_purchase.create(
-                Purchase(
-                    total_amount=16300.00,
-                    status=PurchaseStatus.CONFIRMED,
-                    purchase_date=datetime.utcnow(),
-                    supplier_id = supplier.id
-                )
-            )
 
-            # ---------------- PURCHASE ITEM ----------------
-            purchase_item = await repo_purchase_item.create(
-                PurchaseItem(
-                    product_id=product.id,
-                    purchase_id=purchase.id,
-                    quantity=100,
-                    unit_price=Decimal("10000")
-                )
+            print("Seeding products...")
+            products = await persist_entities(
+                build_products(category_map, brand_map),
+                product_repo.create
             )
+            product_map = {p.sku: p for p in products}
+            print(f"{len(products)} products created")
 
-            # ---------------- DOCUMENT ----------------
-            document = await repo_document.create(
-                Document(
-                    file_url="/docs/ticket_001.pdf",
-                    filename="ticket_compra_001",
-                    purchase_id=purchase.id
-                )
-            )
 
-            # ---------------- STOCK MOVEMENT ----------------
-            await repo_stock.create(
-                StockMovement(
-                    product_id=product.id,
-                    reference_id=purchase.id,
-                    quantity=100,
-                    movement_type=StockMovementType.IN,
-                    reference_type=StockMovementReferenceType.PURCHASE
-                )
+            print("Seeding purchases...")
+            purchases = await persist_entities(
+                build_purchases(supplier_map),
+                purchase_repo.create
             )
+            print(f"{len(purchases)} purchases created")
+
+
+            print("Seeding purchase items...")
+            purchase_items = await persist_entities(
+                build_purchase_items(purchases, product_map),
+                purchase_item_repo.create
+            )
+            print(f"{len(purchase_items)} purchase items created")
+
+
+            print("Recalculating purchase totals...")
+            for purchase in purchases:
+                items = [i for i in purchase_items if i.purchase_id == purchase.id]
+                purchase.total_amount = calculate_purchase_total(items)
+                await purchase_repo.update(purchase)
+
+
+            print("Creating stock movements...")
+            stock_movements = await persist_entities(
+                build_stock_movements(purchase_items),
+                stock_repo.create
+            )
+            print(f"{len(stock_movements)} stock movements created")
+
+
+            print("Creating documents...")
+            documents = await persist_entities(
+                build_documents(purchases),
+                document_repo.create
+            )
+            print(f"{len(documents)} documents created")
+
 
             await db.commit()
+            print("Seed executed successfully 🚀")
 
-            print("Seed Execute OK")
-
-        except Exception as e:
+        except Exception as ex:
             await db.rollback()
-            raise e
+            print(f"Seed error: {ex}")
+            raise
 
 
 if __name__ == "__main__":

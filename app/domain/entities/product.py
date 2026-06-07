@@ -23,6 +23,8 @@ class Product:
 
     unit: Unit = Unit.UNIT
 
+    brand_id: UUID | None = None
+
     category_id: UUID | None = None
 
     uploaded_at: datetime = field(default_factory=datetime.now)

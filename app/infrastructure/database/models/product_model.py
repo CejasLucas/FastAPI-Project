@@ -58,6 +58,12 @@ class ProductModel(Base):
         nullable=False
     )
 
+    brand_id: Mapped[UUID | None] = mapped_column(
+        PGUUID(as_uuid=True),
+        ForeignKey("brand.id"),
+        nullable=True
+    )
+
     category_id: Mapped[UUID | None] = mapped_column(
         PGUUID(as_uuid=True),
         ForeignKey("category.id"),

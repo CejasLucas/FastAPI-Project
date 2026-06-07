@@ -1,0 +1,46 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+
+# Virtual Environment
+.venv/
+venv/
+
+# Environment Variables
+.env
+
+# IDEs
+.idea/
+.vscode/
+
+# JetBrains
+*.iml
+
+# Database files
+*.db
+*.sqlite3
+
+# Logs
+*.log
+
+# Pytest
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Build
+build/
+dist/
+*.egg-info/
+
+# Docker
+docker-data/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# XML
+*.xml .idea
