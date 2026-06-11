@@ -1,4 +1,5 @@
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 
 from app.infrastructure.database.base import Base
 from app.infrastructure.database.session import engine
@@ -13,6 +14,14 @@ from app.api.routes.purchase_item_routes import router as purchase_item_router
 from app.api.routes.stock_movement_routes import router as stock_movement_router
 
 app = FastAPI(title="AutoParts API")
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[ "http://localhost:5173", "http://127.0.0.1:5173" ],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 app.include_router(supplier_router)
 app.include_router(brand_router)

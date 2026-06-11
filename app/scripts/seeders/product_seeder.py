@@ -7,10 +7,10 @@ def build_products(category_map: dict, brand_map: dict) -> list[Product]:
         # FILTERS
         Product(
             sku="FIL-001",
-            name="Filtro de Aceite",
-            description="Filtro de aceite para motor",
-            current_stock=50,
-            minimum_stock=10,
+            name="Oil Filter",
+            description="Engine oil filter",
+            current_stock=10,
+            minimum_stock=25,
             last_purchase_price=12000,
             unit=Unit.UNIT,
             brand_id=brand_map["BOSCH"].id,
@@ -18,8 +18,8 @@ def build_products(category_map: dict, brand_map: dict) -> list[Product]:
         ),
         Product(
             sku="FIL-002",
-            name="Filtro de Aire",
-            description="Filtro de aire para admisión",
+            name="Air Filter",
+            description="Intake air filter",
             current_stock=40,
             minimum_stock=10,
             last_purchase_price=14000,
@@ -29,10 +29,10 @@ def build_products(category_map: dict, brand_map: dict) -> list[Product]:
         ),
         Product(
             sku="FIL-003",
-            name="Filtro de Combustible",
-            description="Filtro para sistema de inyección",
-            current_stock=35,
-            minimum_stock=8,
+            name="Fuel Filter",
+            description="Fuel injection system filter",
+            current_stock=10,
+            minimum_stock=15,
             last_purchase_price=11000,
             unit=Unit.UNIT,
             brand_id=brand_map["MANN-FILTER"].id,
@@ -42,8 +42,8 @@ def build_products(category_map: dict, brand_map: dict) -> list[Product]:
         # BRAKES
         Product(
             sku="BRA-001",
-            name="Pastillas de Freno Delanteras",
-            description="Juego de pastillas delanteras",
+            name="Front Brake Pads",
+            description="Front brake pad set",
             current_stock=25,
             minimum_stock=5,
             last_purchase_price=28000,
@@ -53,8 +53,8 @@ def build_products(category_map: dict, brand_map: dict) -> list[Product]:
         ),
         Product(
             sku="BRA-002",
-            name="Disco de Freno Ventilado",
-            description="Disco ventilado delantero",
+            name="Vented Brake Disc",
+            description="Front vented brake disc",
             current_stock=15,
             minimum_stock=3,
             last_purchase_price=45000,
@@ -64,8 +64,8 @@ def build_products(category_map: dict, brand_map: dict) -> list[Product]:
         ),
         Product(
             sku="BRA-003",
-            name="Campana de Freno",
-            description="Campana trasera",
+            name="Brake Drum",
+            description="Rear brake drum",
             current_stock=12,
             minimum_stock=2,
             last_purchase_price=32000,
@@ -77,8 +77,8 @@ def build_products(category_map: dict, brand_map: dict) -> list[Product]:
         # SUSPENSION
         Product(
             sku="SUS-001",
-            name="Amortiguador Delantero",
-            description="Amortiguador hidráulico",
+            name="Front Shock Absorber",
+            description="Hydraulic shock absorber",
             current_stock=18,
             minimum_stock=4,
             last_purchase_price=85000,
@@ -88,8 +88,8 @@ def build_products(category_map: dict, brand_map: dict) -> list[Product]:
         ),
         Product(
             sku="SUS-002",
-            name="Amortiguador Trasero",
-            description="Amortiguador trasero",
+            name="Rear Shock Absorber",
+            description="Rear shock absorber",
             current_stock=16,
             minimum_stock=4,
             last_purchase_price=79000,
@@ -99,8 +99,8 @@ def build_products(category_map: dict, brand_map: dict) -> list[Product]:
         ),
         Product(
             sku="SUS-003",
-            name="Espiral Delantera",
-            description="Resorte delantero",
+            name="Front Coil Spring",
+            description="Front suspension spring",
             current_stock=10,
             minimum_stock=2,
             last_purchase_price=65000,
@@ -112,8 +112,8 @@ def build_products(category_map: dict, brand_map: dict) -> list[Product]:
         # ENGINE
         Product(
             sku="ENG-001",
-            name="Correa de Distribución",
-            description="Kit de distribución",
+            name="Timing Belt Kit",
+            description="Complete timing kit",
             current_stock=20,
             minimum_stock=5,
             last_purchase_price=58000,
@@ -123,10 +123,10 @@ def build_products(category_map: dict, brand_map: dict) -> list[Product]:
         ),
         Product(
             sku="ENG-002",
-            name="Bomba de Agua",
-            description="Bomba de agua para motor",
-            current_stock=12,
-            minimum_stock=3,
+            name="Water Pump",
+            description="Engine water pump",
+            current_stock=5,
+            minimum_stock=5,
             last_purchase_price=72000,
             unit=Unit.UNIT,
             brand_id=brand_map["AISIN"].id,
@@ -134,8 +134,8 @@ def build_products(category_map: dict, brand_map: dict) -> list[Product]:
         ),
         Product(
             sku="ENG-003",
-            name="Junta de Tapa de Cilindros",
-            description="Junta para tapa de válvulas",
+            name="Valve Cover Gasket",
+            description="Cylinder head cover gasket",
             current_stock=30,
             minimum_stock=5,
             last_purchase_price=9000,
@@ -147,8 +147,8 @@ def build_products(category_map: dict, brand_map: dict) -> list[Product]:
         # ELECTRICAL
         Product(
             sku="ELE-001",
-            name="Bujía",
-            description="Bujía estándar",
+            name="Spark Plug",
+            description="Standard spark plug",
             current_stock=100,
             minimum_stock=20,
             last_purchase_price=5000,
@@ -158,10 +158,10 @@ def build_products(category_map: dict, brand_map: dict) -> list[Product]:
         ),
         Product(
             sku="ELE-002",
-            name="Bobina de Encendido",
-            description="Bobina electrónica",
-            current_stock=18,
-            minimum_stock=4,
+            name="Ignition Coil",
+            description="Electronic ignition coil",
+            current_stock=7,
+            minimum_stock=10,
             last_purchase_price=42000,
             unit=Unit.UNIT,
             brand_id=brand_map["DENSO"].id,
@@ -169,8 +169,8 @@ def build_products(category_map: dict, brand_map: dict) -> list[Product]:
         ),
         Product(
             sku="ELE-003",
-            name="Alternador",
-            description="Alternador 12V",
+            name="Alternator",
+            description="12V alternator",
             current_stock=8,
             minimum_stock=2,
             last_purchase_price=120000,
@@ -182,8 +182,8 @@ def build_products(category_map: dict, brand_map: dict) -> list[Product]:
         # LUBRICANTS
         Product(
             sku="LUB-001",
-            name="Aceite Sintético 5W30",
-            description="Lubricante sintético",
+            name="Synthetic Oil 5W30",
+            description="Full synthetic lubricant",
             current_stock=80,
             minimum_stock=20,
             last_purchase_price=18000,
@@ -193,8 +193,8 @@ def build_products(category_map: dict, brand_map: dict) -> list[Product]:
         ),
         Product(
             sku="LUB-002",
-            name="Líquido de Frenos DOT4",
-            description="Fluido hidráulico",
+            name="Brake Fluid DOT4",
+            description="Hydraulic brake fluid",
             current_stock=50,
             minimum_stock=10,
             last_purchase_price=8000,
@@ -206,10 +206,10 @@ def build_products(category_map: dict, brand_map: dict) -> list[Product]:
         # COOLING
         Product(
             sku="COL-001",
-            name="Radiador",
-            description="Radiador de aluminio",
-            current_stock=6,
-            minimum_stock=2,
+            name="Radiator",
+            description="Aluminum radiator",
+            current_stock=5,
+            minimum_stock=10,
             last_purchase_price=140000,
             unit=Unit.UNIT,
             brand_id=brand_map["VALEO"].id,
@@ -217,8 +217,8 @@ def build_products(category_map: dict, brand_map: dict) -> list[Product]:
         ),
         Product(
             sku="COL-002",
-            name="Termostato",
-            description="Válvula termostática",
+            name="Thermostat",
+            description="Thermostatic valve",
             current_stock=20,
             minimum_stock=5,
             last_purchase_price=16000,
@@ -230,8 +230,8 @@ def build_products(category_map: dict, brand_map: dict) -> list[Product]:
         # STEERING
         Product(
             sku="STE-001",
-            name="Terminal de Dirección",
-            description="Terminal exterior",
+            name="Steering Tie Rod End",
+            description="Outer tie rod end",
             current_stock=24,
             minimum_stock=5,
             last_purchase_price=21000,
@@ -241,10 +241,10 @@ def build_products(category_map: dict, brand_map: dict) -> list[Product]:
         ),
         Product(
             sku="STE-002",
-            name="Rótula Inferior",
-            description="Rótula suspensión",
-            current_stock=18,
-            minimum_stock=4,
+            name="Lower Ball Joint",
+            description="Suspension ball joint",
+            current_stock=13,
+            minimum_stock=15,
             last_purchase_price=23000,
             unit=Unit.UNIT,
             brand_id=brand_map["SKF"].id,
@@ -254,10 +254,10 @@ def build_products(category_map: dict, brand_map: dict) -> list[Product]:
         # BATTERIES
         Product(
             sku="BAT-001",
-            name="Batería 12V 65Ah",
-            description="Batería libre mantenimiento",
-            current_stock=15,
-            minimum_stock=3,
+            name="Battery 12V 65Ah",
+            description="Maintenance-free battery",
+            current_stock=10,
+            minimum_stock=50,
             last_purchase_price=125000,
             unit=Unit.UNIT,
             brand_id=brand_map["ACDELCO"].id,
@@ -267,8 +267,8 @@ def build_products(category_map: dict, brand_map: dict) -> list[Product]:
         # LIGHTING
         Product(
             sku="LIG-001",
-            name="Lámpara H4",
-            description="Lámpara halógena",
+            name="H4 Bulb",
+            description="Halogen headlight bulb",
             current_stock=60,
             minimum_stock=10,
             last_purchase_price=7000,
@@ -280,8 +280,8 @@ def build_products(category_map: dict, brand_map: dict) -> list[Product]:
         # WIPERS
         Product(
             sku="WIP-001",
-            name="Escobilla Limpiaparabrisas",
-            description="Escobilla universal",
+            name="Windshield Wiper Blade",
+            description="Universal wiper blade",
             current_stock=40,
             minimum_stock=10,
             last_purchase_price=12000,
@@ -293,8 +293,8 @@ def build_products(category_map: dict, brand_map: dict) -> list[Product]:
         # SENSORS
         Product(
             sku="SEN-001",
-            name="Sensor ABS",
-            description="Sensor rueda ABS",
+            name="ABS Sensor",
+            description="Wheel speed ABS sensor",
             current_stock=14,
             minimum_stock=3,
             last_purchase_price=38000,
@@ -304,8 +304,8 @@ def build_products(category_map: dict, brand_map: dict) -> list[Product]:
         ),
         Product(
             sku="SEN-002",
-            name="Sensor de Oxígeno",
-            description="Sonda lambda",
+            name="Oxygen Sensor",
+            description="Lambda probe sensor",
             current_stock=10,
             minimum_stock=2,
             last_purchase_price=55000,
@@ -314,11 +314,11 @@ def build_products(category_map: dict, brand_map: dict) -> list[Product]:
             category_id=category_map["SENSORS"].id,
         ),
 
-        # CHINAS
+        # CHINESE BRANDS
         Product(
             sku="CHI-001",
-            name="Filtro de Aire Chery Tiggo",
-            description="Filtro para SUV",
+            name="Chery Tiggo Air Filter",
+            description="Air filter for SUV",
             current_stock=22,
             minimum_stock=5,
             last_purchase_price=13000,
@@ -328,8 +328,8 @@ def build_products(category_map: dict, brand_map: dict) -> list[Product]:
         ),
         Product(
             sku="CHI-002",
-            name="Pastillas de Freno Great Wall",
-            description="Juego delantero",
+            name="Great Wall Brake Pads",
+            description="Front brake pad set",
             current_stock=18,
             minimum_stock=4,
             last_purchase_price=24000,
@@ -339,13 +339,48 @@ def build_products(category_map: dict, brand_map: dict) -> list[Product]:
         ),
         Product(
             sku="CHI-003",
-            name="Bobina de Encendido BYD",
-            description="Sistema de encendido",
+            name="BYD Ignition Coil",
+            description="Ignition system coil",
             current_stock=12,
             minimum_stock=3,
             last_purchase_price=39000,
             unit=Unit.UNIT,
             brand_id=brand_map["BYD AUTO PARTS"].id,
             category_id=category_map["ELECTRICAL"].id,
+        ),
+
+        # TIRES
+        Product(
+            sku="TIR-001",
+            name="All-Season Tire 185/65 R15",
+            description="All-season passenger tire",
+            current_stock=20,
+            minimum_stock=8,
+            last_purchase_price=95000,
+            unit=Unit.UNIT,
+            brand_id=brand_map["BRIDGESTONE"].id,
+            category_id=category_map["WHEELS_AND_TIRES"].id,
+        ),
+        Product(
+            sku="TIR-002",
+            name="Performance Tire 205/55 R16",
+            description="High-performance summer tire",
+            current_stock=16,
+            minimum_stock=6,
+            last_purchase_price=115000,
+            unit=Unit.UNIT,
+            brand_id=brand_map["MICHELIN"].id,
+            category_id=category_map["WHEELS_AND_TIRES"].id,
+        ),
+        Product(
+            sku="TIR-003",
+            name="SUV Tire 235/65 R17",
+            description="All-terrain SUV tire",
+            current_stock=12,
+            minimum_stock=4,
+            last_purchase_price=130000,
+            unit=Unit.UNIT,
+            brand_id=brand_map["GOODYEAR"].id,
+            category_id=category_map["WHEELS_AND_TIRES"].id,
         ),
     ]

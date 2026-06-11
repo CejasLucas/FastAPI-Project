@@ -13,6 +13,12 @@ class Supplier:
 
     phone: str = ""
 
+    address: str = ""
+
+    locality: str = ""
+
+    nationality: str = ""
+
     tax_id: str = ""
 
     uploaded_at: datetime = field(default_factory=datetime.now)

@@ -35,6 +35,21 @@ class SupplierModel(Base):
         nullable=False
     )
 
+    address: Mapped[str] = mapped_column(
+        String,
+        nullable=False
+    )
+
+    locality: Mapped[str] = mapped_column(
+        String,
+        nullable=False
+    )
+
+    nationality: Mapped[str] = mapped_column(
+        String,
+        nullable=False
+    )
+
     tax_id: Mapped[str] = mapped_column(
         String,
         nullable=False,

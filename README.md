@@ -22,7 +22,7 @@
     sudo kill -9 <PID>
 
     docker compose up -d --build
-    
+
     
     # 02. Verify with Swagger that everything is working correctly. 
     # Check the logs. If this is the first time, run Bootstrap.
@@ -33,7 +33,11 @@
     docker logs -f autoparts-db
 
     docker exec -it autoparts-api python -m app.scripts.seed
-
+    
+    docker compose up -d    
+        
+    docker compose stop
+    
     
     # 03. If we have an error in the previous step, 
     # we must delete the container and its associated volume.
@@ -42,11 +46,15 @@
     docker volume ls
     
     docker volume rm <NAME_VOLUME>
+    
+    # 04. Check
+    docker exec -it autoparts-db psql -U admin -d autoparts
+    \dt
 ``` 
 
 ## Project Architecture
 ```
-    PastAPI-Project
+    FastAPI-Project
     │
     ├── .venv/
     ├── app/
@@ -74,6 +82,11 @@
     │   │   │   └── __init__.py
     │   │   ├── mappers/
     │   │   ├── repositories/
+    │   │   └── __init__.py
+    │   │
+    │   ├── scripts/
+    │   │   ├── seeders/
+    │   │   ├── __main__.py
     │   │   └── __init__.py
     │   │
     │   ├── __main__.py

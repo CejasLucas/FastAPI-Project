@@ -5,98 +5,98 @@ def build_categories() -> list[Category]:
     return [
         Category(
             name="FILTERS",
-            description="Filtros de aceite, aire, combustible y habitáculo"
+            description="Oil, air, fuel, and cabin filters"
         ),
         Category(
             name="BRAKES",
-            description="Pastillas, discos, campanas y componentes de freno"
+            description="Brake pads, discs, drums, and brake components"
         ),
         Category(
             name="SUSPENSION",
-            description="Amortiguadores, espirales y tren delantero"
+            description="Shock absorbers, springs, and front suspension components"
         ),
         Category(
             name="STEERING",
-            description="Dirección, terminales y rótulas"
+            description="Steering components, tie rod ends, and ball joints"
         ),
         Category(
             name="ENGINE",
-            description="Componentes internos y externos del motor"
+            description="Internal and external engine components"
         ),
         Category(
             name="ELECTRICAL",
-            description="Sistema eléctrico y encendido"
+            description="Electrical and ignition system components"
         ),
         Category(
             name="LUBRICANTS",
-            description="Aceites, grasas y fluidos"
+            description="Oils, greases, and fluids"
         ),
         Category(
             name="TRANSMISSION",
-            description="Embrague, caja de cambios y transmisión"
+            description="Clutch, gearbox, and transmission components"
         ),
         Category(
             name="COOLING",
-            description="Radiadores, bombas de agua y refrigeración"
+            description="Radiators, water pumps, and cooling system components"
         ),
         Category(
             name="EXHAUST",
-            description="Escape, catalizadores y silenciadores"
+            description="Exhaust systems, catalytic converters, and mufflers"
         ),
         Category(
             name="FUEL_SYSTEM",
-            description="Bombas, inyectores y componentes de combustible"
+            description="Fuel pumps, injectors, and fuel system components"
         ),
         Category(
             name="IGNITION",
-            description="Bujías, bobinas y sistema de encendido"
+            description="Spark plugs, ignition coils, and ignition system components"
         ),
         Category(
             name="BATTERIES",
-            description="Baterías y accesorios"
+            description="Batteries and battery accessories"
         ),
         Category(
             name="LIGHTING",
-            description="Faros, lámparas y sistema de iluminación"
+            description="Headlights, bulbs, and lighting system components"
         ),
         Category(
             name="AIR_CONDITIONING",
-            description="Aire acondicionado y climatización"
+            description="Air conditioning and climate control components"
         ),
         Category(
             name="BODY_PARTS",
-            description="Paragolpes, guardabarros y carrocería"
+            description="Bumpers, fenders, and body components"
         ),
         Category(
             name="MIRRORS",
-            description="Espejos interiores y exteriores"
+            description="Interior and exterior mirrors"
         ),
         Category(
             name="WIPERS",
-            description="Escobillas y sistema limpiaparabrisas"
+            description="Wiper blades and windshield wiper system components"
         ),
         Category(
             name="WHEELS_AND_TIRES",
-            description="Llantas, neumáticos y accesorios"
+            description="Wheels, tires, and related accessories"
         ),
         Category(
             name="BEARINGS",
-            description="Rulemanes y rodamientos"
+            description="Bearings and wheel bearings"
         ),
         Category(
             name="BELTS_AND_TENSIONERS",
-            description="Correas, tensores y poleas"
+            description="Belts, tensioners, and pulleys"
         ),
         Category(
             name="SENSORS",
-            description="Sensores de motor, ABS y electrónica"
+            description="Engine, ABS, and electronic sensors"
         ),
         Category(
             name="TOOLS",
-            description="Herramientas y accesorios para taller"
+            description="Workshop tools and equipment"
         ),
         Category(
             name="ACCESSORIES",
-            description="Accesorios y complementos para vehículos"
+            description="Vehicle accessories and add-ons"
         ),
     ]

@@ -5,7 +5,7 @@ from app.domain.entities.purchase_item import PurchaseItem
 
 def build_purchase_items(purchases, product_map) -> list[PurchaseItem]:
     return [
-        # COMPRA 1
+        # PURCHASE 1 (January) - Total: 980.000
         PurchaseItem(
             purchase_id=purchases[0].id,
             product_id=product_map["FIL-001"].id,
@@ -31,7 +31,7 @@ def build_purchase_items(purchases, product_map) -> list[PurchaseItem]:
             unit_price=Decimal("5000")
         ),
 
-        # COMPRA 2
+        # PURCHASE 2 (February) - Total: 3.018.000
         PurchaseItem(
             purchase_id=purchases[1].id,
             product_id=product_map["SUS-001"].id,
@@ -63,7 +63,7 @@ def build_purchase_items(purchases, product_map) -> list[PurchaseItem]:
             unit_price=Decimal("140000")
         ),
 
-        # COMPRA 3
+        # PURCHASE 3 (March) - Total: 1.411.000
         PurchaseItem(
             purchase_id=purchases[2].id,
             product_id=product_map["STE-001"].id,
@@ -89,7 +89,7 @@ def build_purchase_items(purchases, product_map) -> list[PurchaseItem]:
             unit_price=Decimal("55000")
         ),
 
-        # COMPRA 4
+        # PURCHASE 4 (April) - Total: 2.900.000
         PurchaseItem(
             purchase_id=purchases[3].id,
             product_id=product_map["BAT-001"].id,
@@ -124,6 +124,291 @@ def build_purchase_items(purchases, product_map) -> list[PurchaseItem]:
             purchase_id=purchases[3].id,
             product_id=product_map["CHI-003"].id,
             quantity=10,
+            unit_price=Decimal("39000")
+        ),
+
+        # PURCHASE 5 (May) - Total: 1.460.000
+        PurchaseItem(
+            purchase_id=purchases[4].id,
+            product_id=product_map["ENG-001"].id,
+            quantity=10,
+            unit_price=Decimal("58000")
+        ),
+        PurchaseItem(
+            purchase_id=purchases[4].id,
+            product_id=product_map["ENG-002"].id,
+            quantity=5,
+            unit_price=Decimal("72000")
+        ),
+        PurchaseItem(
+            purchase_id=purchases[4].id,
+            product_id=product_map["COL-001"].id,
+            quantity=2,
+            unit_price=Decimal("140000")
+        ),
+        PurchaseItem(
+            purchase_id=purchases[4].id,
+            product_id=product_map["FIL-001"].id,
+            quantity=20,
+            unit_price=Decimal("12000")
+        ),
+
+        # PURCHASE 6 (June) - Total: 1.858.000
+        PurchaseItem(
+            purchase_id=purchases[5].id,
+            product_id=product_map["SUS-001"].id,
+            quantity=8,
+            unit_price=Decimal("85000")
+        ),
+        PurchaseItem(
+            purchase_id=purchases[5].id,
+            product_id=product_map["SUS-002"].id,
+            quantity=8,
+            unit_price=Decimal("79000")
+        ),
+        PurchaseItem(
+            purchase_id=purchases[5].id,
+            product_id=product_map["BRA-001"].id,
+            quantity=12,
+            unit_price=Decimal("28000")
+        ),
+        PurchaseItem(
+            purchase_id=purchases[5].id,
+            product_id=product_map["FIL-002"].id,
+            quantity=15,
+            unit_price=Decimal("14000")
+        ),
+
+        # PURCHASE 7 (July - Pending) - Total: 1.875.000
+        PurchaseItem(
+            purchase_id=purchases[6].id,
+            product_id=product_map["BAT-001"].id,
+            quantity=5,
+            unit_price=Decimal("125000")
+        ),
+        PurchaseItem(
+            purchase_id=purchases[6].id,
+            product_id=product_map["CHI-001"].id,
+            quantity=20,
+            unit_price=Decimal("13000")
+        ),
+        PurchaseItem(
+            purchase_id=purchases[6].id,
+            product_id=product_map["CHI-002"].id,
+            quantity=15,
+            unit_price=Decimal("24000")
+        ),
+        PurchaseItem(
+            purchase_id=purchases[6].id,
+            product_id=product_map["CHI-003"].id,
+            quantity=10,
+            unit_price=Decimal("39000")
+        ),
+        PurchaseItem(
+            purchase_id=purchases[6].id,
+            product_id=product_map["WIP-001"].id,
+            quantity=20,
+            unit_price=Decimal("12000")
+        ),
+
+        # PURCHASE 8 (August - Pending) - Total: 3.440.000
+        # Tires first big restock + brakes + sensors
+        PurchaseItem(
+            purchase_id=purchases[7].id,
+            product_id=product_map["TIR-001"].id,
+            quantity=16,
+            unit_price=Decimal("95000")
+        ),
+        PurchaseItem(
+            purchase_id=purchases[7].id,
+            product_id=product_map["TIR-002"].id,
+            quantity=12,
+            unit_price=Decimal("115000")
+        ),
+        PurchaseItem(
+            purchase_id=purchases[7].id,
+            product_id=product_map["TIR-003"].id,
+            quantity=8,
+            unit_price=Decimal("130000")
+        ),
+        PurchaseItem(
+            purchase_id=purchases[7].id,
+            product_id=product_map["BRA-002"].id,
+            quantity=10,
+            unit_price=Decimal("45000")
+        ),
+        PurchaseItem(
+            purchase_id=purchases[7].id,
+            product_id=product_map["BRA-003"].id,
+            quantity=8,
+            unit_price=Decimal("32000")
+        ),
+
+        # PURCHASE 9 (September - Pending) - Total: 2.174.000
+        # Engine + electrical restock
+        PurchaseItem(
+            purchase_id=purchases[8].id,
+            product_id=product_map["ENG-001"].id,
+            quantity=15,
+            unit_price=Decimal("58000")
+        ),
+        PurchaseItem(
+            purchase_id=purchases[8].id,
+            product_id=product_map["ENG-003"].id,
+            quantity=20,
+            unit_price=Decimal("9000")
+        ),
+        PurchaseItem(
+            purchase_id=purchases[8].id,
+            product_id=product_map["ELE-002"].id,
+            quantity=12,
+            unit_price=Decimal("42000")
+        ),
+        PurchaseItem(
+            purchase_id=purchases[8].id,
+            product_id=product_map["ELE-003"].id,
+            quantity=5,
+            unit_price=Decimal("120000")
+        ),
+        PurchaseItem(
+            purchase_id=purchases[8].id,
+            product_id=product_map["ELE-001"].id,
+            quantity=80,
+            unit_price=Decimal("5000")
+        ),
+
+        # PURCHASE 10 (October - Pending) - Total: 3.985.000
+        # Pre-summer tire push + cooling + lubricants
+        PurchaseItem(
+            purchase_id=purchases[9].id,
+            product_id=product_map["TIR-001"].id,
+            quantity=20,
+            unit_price=Decimal("95000")
+        ),
+        PurchaseItem(
+            purchase_id=purchases[9].id,
+            product_id=product_map["TIR-002"].id,
+            quantity=15,
+            unit_price=Decimal("115000")
+        ),
+        PurchaseItem(
+            purchase_id=purchases[9].id,
+            product_id=product_map["LUB-001"].id,
+            quantity=40,
+            unit_price=Decimal("18000")
+        ),
+        PurchaseItem(
+            purchase_id=purchases[9].id,
+            product_id=product_map["LUB-002"].id,
+            quantity=30,
+            unit_price=Decimal("8000")
+        ),
+        PurchaseItem(
+            purchase_id=purchases[9].id,
+            product_id=product_map["COL-002"].id,
+            quantity=15,
+            unit_price=Decimal("16000")
+        ),
+        PurchaseItem(
+            purchase_id=purchases[9].id,
+            product_id=product_map["FIL-003"].id,
+            quantity=25,
+            unit_price=Decimal("11000")
+        ),
+
+        # PURCHASE 11 (November - Pending) - Total: 4.120.000
+        # End-of-year suspension + steering + batteries
+        PurchaseItem(
+            purchase_id=purchases[10].id,
+            product_id=product_map["SUS-001"].id,
+            quantity=12,
+            unit_price=Decimal("85000")
+        ),
+        PurchaseItem(
+            purchase_id=purchases[10].id,
+            product_id=product_map["SUS-002"].id,
+            quantity=12,
+            unit_price=Decimal("79000")
+        ),
+        PurchaseItem(
+            purchase_id=purchases[10].id,
+            product_id=product_map["SUS-003"].id,
+            quantity=10,
+            unit_price=Decimal("65000")
+        ),
+        PurchaseItem(
+            purchase_id=purchases[10].id,
+            product_id=product_map["STE-001"].id,
+            quantity=20,
+            unit_price=Decimal("21000")
+        ),
+        PurchaseItem(
+            purchase_id=purchases[10].id,
+            product_id=product_map["STE-002"].id,
+            quantity=15,
+            unit_price=Decimal("23000")
+        ),
+        PurchaseItem(
+            purchase_id=purchases[10].id,
+            product_id=product_map["BAT-001"].id,
+            quantity=8,
+            unit_price=Decimal("125000")
+        ),
+
+        # PURCHASE 12 (December - Pending) - Total: 5.236.000
+        # Year-end mega restock across all categories
+        PurchaseItem(
+            purchase_id=purchases[11].id,
+            product_id=product_map["TIR-001"].id,
+            quantity=24,
+            unit_price=Decimal("95000")
+        ),
+        PurchaseItem(
+            purchase_id=purchases[11].id,
+            product_id=product_map["TIR-002"].id,
+            quantity=20,
+            unit_price=Decimal("115000")
+        ),
+        PurchaseItem(
+            purchase_id=purchases[11].id,
+            product_id=product_map["TIR-003"].id,
+            quantity=16,
+            unit_price=Decimal("130000")
+        ),
+        PurchaseItem(
+            purchase_id=purchases[11].id,
+            product_id=product_map["BRA-001"].id,
+            quantity=20,
+            unit_price=Decimal("28000")
+        ),
+        PurchaseItem(
+            purchase_id=purchases[11].id,
+            product_id=product_map["ENG-002"].id,
+            quantity=8,
+            unit_price=Decimal("72000")
+        ),
+        PurchaseItem(
+            purchase_id=purchases[11].id,
+            product_id=product_map["SEN-001"].id,
+            quantity=15,
+            unit_price=Decimal("38000")
+        ),
+        PurchaseItem(
+            purchase_id=purchases[11].id,
+            product_id=product_map["SEN-002"].id,
+            quantity=10,
+            unit_price=Decimal("55000")
+        ),
+        PurchaseItem(
+            purchase_id=purchases[11].id,
+            product_id=product_map["LUB-001"].id,
+            quantity=50,
+            unit_price=Decimal("18000")
+        ),
+        PurchaseItem(
+            purchase_id=purchases[11].id,
+            product_id=product_map["CHI-003"].id,
+            quantity=12,
             unit_price=Decimal("39000")
         ),
     ]

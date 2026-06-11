@@ -7,6 +7,9 @@ def to_domain(model: SupplierModel) -> Supplier:
         name=model.name,
         email=model.email,
         phone=model.phone,
+        address=model.address,
+        locality=model.locality,
+        nationality=model.nationality,
         tax_id=model.tax_id,
         uploaded_at=model.uploaded_at
     )
@@ -17,6 +20,9 @@ def to_model(entity: Supplier) -> SupplierModel:
         name=entity.name,
         email=entity.email,
         phone=entity.phone,
+        address=entity.address,
+        locality=entity.locality,
+        nationality=entity.nationality,
         tax_id=entity.tax_id,
         uploaded_at=entity.uploaded_at
     )
