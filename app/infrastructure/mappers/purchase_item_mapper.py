@@ -1,4 +1,3 @@
-from decimal import Decimal
 from app.domain.entities.purchase_item import PurchaseItem
 from app.infrastructure.database.models.purchase_item_model import PurchaseItemModel
 
@@ -8,7 +7,7 @@ def to_domain(model: PurchaseItemModel) -> PurchaseItem:
         product_id=model.product_id,
         purchase_id=model.purchase_id,
         quantity=model.quantity,
-        unit_price=Decimal(model.unit_price),
+        unit_price=model.unit_price,
         uploaded_at=model.uploaded_at
     )
 
@@ -18,6 +17,6 @@ def to_model(entity: PurchaseItem) -> PurchaseItemModel:
         product_id=entity.product_id,
         purchase_id=entity.purchase_id,
         quantity=entity.quantity,
-        unit_price=float(entity.unit_price),
+        unit_price=entity.unit_price,
         uploaded_at=entity.uploaded_at
     )

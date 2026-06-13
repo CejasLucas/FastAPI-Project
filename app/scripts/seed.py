@@ -1,5 +1,4 @@
 import asyncio
-from decimal import Decimal
 from app.infrastructure.database.session import SessionLocal
 
 from app.infrastructure.repositories.brand_repository import SqlAlchemyBrandRepository
@@ -26,7 +25,7 @@ async def persist_entities(entities, create_fn):
 
 
 def calculate_purchase_total(items):
-    return sum(Decimal(item.quantity) * item.unit_price for item in items)
+    return sum(item.quantity * item.unit_price for item in items)
 
 
 async def seed():

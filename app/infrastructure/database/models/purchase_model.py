@@ -53,4 +53,8 @@ class PurchaseModel(Base):
         cascade="all, delete-orphan"
     )
 
-    items = relationship("PurchaseItemModel", backref="purchase", cascade="all, delete-orphan")
+    items = relationship(
+        "PurchaseItemModel",
+        backref="purchase",
+        cascade="all, delete-orphan"
+    )

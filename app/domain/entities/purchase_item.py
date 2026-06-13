@@ -1,5 +1,4 @@
 from uuid import UUID
-from decimal import Decimal
 from datetime import datetime
 from dataclasses import dataclass, field
 
@@ -14,10 +13,10 @@ class PurchaseItem:
 
     quantity: int = 0
 
-    unit_price: Decimal = Decimal("0.00")
+    unit_price: float = 0.0
 
     uploaded_at: datetime = field(default_factory=datetime.now)
 
     @property
-    def subtotal(self) -> Decimal:
+    def subtotal(self) -> float:
         return self.unit_price * self.quantity

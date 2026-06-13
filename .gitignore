@@ -43,4 +43,4 @@ docker-data/
 Thumbs.db
 
 # XML
-*.xml .idea
+*.xml

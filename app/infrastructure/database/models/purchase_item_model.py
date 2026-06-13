@@ -2,9 +2,9 @@ import uuid
 from uuid import UUID
 from datetime import datetime
 
-from sqlalchemy import Integer, Numeric, ForeignKey, DateTime, func
-from sqlalchemy.orm import Mapped, mapped_column
 from sqlalchemy.dialects.postgresql import UUID as PGUUID
+from sqlalchemy.orm import Mapped, mapped_column, relationship
+from sqlalchemy import Integer, Numeric, ForeignKey, DateTime, func
 
 from app.infrastructure.database.base import Base
 
@@ -44,4 +44,9 @@ class PurchaseItemModel(Base):
         DateTime,
         nullable=False,
         server_default=func.now()
+    )
+
+    product = relationship(
+        "ProductModel",
+        backref="purchase_items"
     )
