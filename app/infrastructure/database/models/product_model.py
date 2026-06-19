@@ -2,7 +2,7 @@ import uuid
 from uuid import UUID
 from datetime import datetime
 
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy.dialects.postgresql import UUID as PGUUID
 from sqlalchemy import String, ForeignKey, Integer, Float, DateTime, Enum, func
 
@@ -74,4 +74,15 @@ class ProductModel(Base):
         DateTime,
         nullable=False,
         server_default=func.now()
+    )
+
+    # ── Create objects ────────────────────────────────────────────────────────────────────
+    brand = relationship(
+        "BrandModel",
+        back_populates="products",
+    )
+
+    category = relationship(
+        "CategoryModel",
+        back_populates="products"
     )

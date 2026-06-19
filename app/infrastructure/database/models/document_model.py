@@ -40,4 +40,8 @@ class DocumentModel(Base):
         server_default=func.now()
     )
 
-    purchase = relationship("PurchaseModel", back_populates="documents")
+    # ── Create objects ────────────────────────────────────────────────────────────────────
+    purchase = relationship(
+        "PurchaseModel",
+        back_populates="documents"
+    )

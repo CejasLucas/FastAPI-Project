@@ -3,7 +3,7 @@ from uuid import UUID
 from datetime import datetime
 
 from sqlalchemy import String, DateTime, func
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy.dialects.postgresql import UUID as PGUUID
 
 from app.infrastructure.database.base import Base
@@ -60,4 +60,10 @@ class SupplierModel(Base):
         DateTime,
         nullable=False,
         server_default=func.now()
+    )
+
+    # ── Create objects ────────────────────────────────────────────────────────────────────
+    purchases = relationship(
+        "PurchaseModel",
+        back_populates="supplier"
     )

@@ -53,6 +53,12 @@ class PurchaseModel(Base):
         cascade="all, delete-orphan"
     )
 
+    # ── Create objects ────────────────────────────────────────────────────────────────────
+    supplier = relationship(
+        "SupplierModel",
+        back_populates="purchases"
+    )
+
     items = relationship(
         "PurchaseItemModel",
         backref="purchase",

@@ -3,7 +3,7 @@ from uuid import UUID
 from datetime import datetime
 
 from sqlalchemy import String, DateTime, func, Boolean
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy.dialects.postgresql import UUID as PGUUID
 
 from app.infrastructure.database.base import Base
@@ -38,4 +38,10 @@ class BrandModel(Base):
         DateTime,
         nullable=False,
         server_default=func.now()
+    )
+
+    # ── Create objects ────────────────────────────────────────────────────────────────────
+    products = relationship(
+        "ProductModel",
+        back_populates="brand"
     )

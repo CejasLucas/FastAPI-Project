@@ -46,6 +46,7 @@ class PurchaseItemModel(Base):
         server_default=func.now()
     )
 
+    # ── Create objects ────────────────────────────────────────────────────────────────────
     product = relationship(
         "ProductModel",
         backref="purchase_items"

@@ -15,6 +15,7 @@ from app.infrastructure.database.models.purchase_model import PurchaseModel
 from app.infrastructure.mappers.purchase_mapper import to_domain, to_model
 from app.infrastructure.repositories.base_repository import SqlAlchemyBaseRepository
 from app.infrastructure.database.models.purchase_item_model import PurchaseItemModel
+from app.infrastructure.database.models.product_model import ProductModel
 
 
 class SqlAlchemyPurchaseRepository(
@@ -34,8 +35,13 @@ class SqlAlchemyPurchaseRepository(
             select(PurchaseModel)
             .where(PurchaseModel.id == purchase_id)
             .options(
+                joinedload(PurchaseModel.supplier),
                 joinedload(PurchaseModel.items)
-                .joinedload(PurchaseItemModel.product)
+                    .joinedload(PurchaseItemModel.product)
+                    .joinedload(ProductModel.category),
+                joinedload(PurchaseModel.items)
+                    .joinedload(PurchaseItemModel.product)
+                    .joinedload(ProductModel.brand),
             )
         )
 
