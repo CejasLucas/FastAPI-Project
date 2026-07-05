@@ -1,21 +1,20 @@
-# DOMAIN
 from uuid import UUID
 
-from sqlalchemy import select
+from sqlalchemy import select, extract, func
 from sqlalchemy.orm import joinedload
 
-from app.domain.entities.purchase import Purchase
-from app.domain.repositories.purchase_repository import PurchaseRepository
-
-# DATABASE
-from app.infrastructure.database.session import AsyncSession
-from app.infrastructure.database.models.purchase_model import PurchaseModel
-
-# INFRASTRUCTURE
 from app.infrastructure.mappers.purchase_mapper import to_domain, to_model
 from app.infrastructure.repositories.base_repository import SqlAlchemyBaseRepository
-from app.infrastructure.database.models.purchase_item_model import PurchaseItemModel
+
+from app.infrastructure.database.session import AsyncSession
 from app.infrastructure.database.models.product_model import ProductModel
+from app.infrastructure.database.models.purchase_model import PurchaseModel
+from app.infrastructure.database.models.purchase_item_model import PurchaseItemModel
+
+from app.domain.entities.purchase import Purchase
+from app.domain.enums.purchase_status import PurchaseStatus
+from app.domain.repositories.purchase_repository import PurchaseRepository
+
 
 
 class SqlAlchemyPurchaseRepository(
@@ -30,7 +29,8 @@ class SqlAlchemyPurchaseRepository(
             to_model=to_model
         )
 
-    async def get_detail(self, purchase_id: UUID):
+
+    async def get_detail(self, purchase_id: UUID) -> Purchase | None:
         stmt = (
             select(PurchaseModel)
             .where(PurchaseModel.id == purchase_id)
@@ -46,7 +46,61 @@ class SqlAlchemyPurchaseRepository(
         )
 
         result = await self.session.execute(stmt)
-
         purchase = result.unique().scalar_one_or_none()
 
-        return purchase
+        return self.to_domain(purchase) if purchase else None
+
+    # ── Métodos de reporte (dashboard) ──────────────────────────────────────
+    # Devuelven el modelo ORM directamente (PurchaseModel), no la entidad de
+    # dominio, porque necesitan relaciones (supplier, items, product,
+    # category) que la entidad de dominio no representa. Son consultas de
+    # solo lectura para reportes, no participan en el ciclo de vida del
+    # agregado de dominio.
+
+    async def get_recent(self, limit: int) -> list[PurchaseModel]:
+        stmt = (
+            select(PurchaseModel)
+            .options(joinedload(PurchaseModel.supplier))
+            .order_by(PurchaseModel.purchase_date.desc())
+            .limit(limit)
+        )
+
+        result = await self.session.execute(stmt)
+        return list(result.unique().scalars().all())
+
+
+    async def get_purchases_by_year(self, year: int) -> list[PurchaseModel]:
+        stmt = (
+            select(PurchaseModel)
+            .where(extract("year", PurchaseModel.purchase_date) == year)
+            .options(
+                joinedload(PurchaseModel.supplier),
+                joinedload(PurchaseModel.items)
+                    .joinedload(PurchaseItemModel.product)
+                    .joinedload(ProductModel.category),
+            )
+        )
+
+        result = await self.session.execute(stmt)
+        return list(result.unique().scalars().all())
+
+
+    async def count_by_year(self, year: int) -> int:
+        stmt = select(func.count()).where(
+            extract("year", PurchaseModel.purchase_date) == year
+        ).select_from(PurchaseModel)
+
+        result = await self.session.execute(stmt)
+        return result.scalar_one()
+
+
+    async def get_total_by_status_and_year(self, year: int, status: PurchaseStatus) -> float:
+        stmt = select(
+            func.coalesce(func.sum(PurchaseModel.total_amount), 0)
+        ).where(
+            extract("year", PurchaseModel.purchase_date) == year,
+            PurchaseModel.status == status,
+        )
+
+        result = await self.session.execute(stmt)
+        return float(result.scalar_one())

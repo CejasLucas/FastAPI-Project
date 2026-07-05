@@ -1,7 +1,7 @@
 from typing import Generic, TypeVar, Type, Callable
 from uuid import UUID
 
-from sqlalchemy import select
+from sqlalchemy import select, func
 from sqlalchemy.ext.asyncio import AsyncSession
 
 T = TypeVar("T")  # Domain Entity
@@ -73,3 +73,7 @@ class SqlAlchemyBaseRepository(Generic[T, M]):
             self.to_domain(model)
             for model in result.scalars().all()
         ]
+
+    async def count_all(self) -> int:
+        result = await self.session.execute( select(func.count()).select_from(self.model) )
+        return result.scalar_one()

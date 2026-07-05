@@ -25,3 +25,7 @@ class BaseRepository(ABC, Generic[T]):
     @abstractmethod
     async def get_all(self) -> list[T]:
         ...
+
+    @abstractmethod
+    async def count_all(self) -> int:
+        ...

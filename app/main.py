@@ -12,6 +12,7 @@ from app.api.routes.document_routes import router as document_router
 from app.api.routes.purchase_routes import router as purchase_router
 from app.api.routes.purchase_item_routes import router as purchase_item_router
 from app.api.routes.stock_movement_routes import router as stock_movement_router
+from app.api.routes.dashboard_routes import router as dashboard_router
 
 app = FastAPI(title="AutoParts API")
 
@@ -31,6 +32,7 @@ app.include_router(document_router)
 app.include_router(purchase_router)
 app.include_router(purchase_item_router)
 app.include_router(stock_movement_router)
+app.include_router(dashboard_router)
 
 @app.on_event("startup")
 async def startup():
