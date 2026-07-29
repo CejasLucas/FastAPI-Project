@@ -1,11 +1,12 @@
 from uuid import UUID
+
 from fastapi import HTTPException
 
 from api.dtos.purchase_dto import (
-    PurchaseItemProductDTO,
-    PurchaseItemDetailDTO,
+    PurchaseDetailDTO,
     PurchaseSupplierDetailDTO,
-    PurchaseDetailDTO
+    PurchaseItemDetailDTO,
+    PurchaseItemProductDTO,
 )
 from app.domain.repositories.purchase_repository import PurchaseRepository
 
@@ -15,7 +16,7 @@ class PurchaseService:
         self.repo = repo
 
     async def get_detail(self, purchase_id: UUID) -> PurchaseDetailDTO:
-        purchase = await self.repo.get_detail(purchase_id)
+        purchase = await self.repo.get_detail_model(purchase_id)
 
         if purchase is None:
             raise HTTPException(status_code=404, detail="Purchase not found")
@@ -45,8 +46,8 @@ class PurchaseService:
                         name=item.product.name,
                         brand=item.product.brand.name,
                         category=item.product.category.name,
-                    )
+                    ),
                 )
                 for item in purchase.items
-            ]
+            ],
         )

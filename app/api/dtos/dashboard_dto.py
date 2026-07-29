@@ -1,24 +1,53 @@
 from datetime import date
 from uuid import UUID
+
 from pydantic import BaseModel
 
+# =========================
+# COUNTS
+# =========================
+class DashboardCountsDTO(BaseModel):
+    amount_purchases: int
+    amount_products: int
+    amount_suppliers: int
+    low_stock_count: int
+    total_spent: float
 
-class ExpensesPerMonthDTO(BaseModel):
-    jan: float = 0; feb: float = 0; mar: float = 0; apr: float = 0
-    may: float = 0; jun: float = 0; jul: float = 0; aug: float = 0
-    sep: float = 0; oct: float = 0; nov: float = 0; dec: float = 0
 
+# =========================
+# KPI
+# =========================
+class DashboardKPIDTO(BaseModel):
+    average_purchase: float
+    largest_purchase: float
+    purchases_this_month: int
+    spending_this_month: float
+    monthly_growth_percentage: float
+
+
+# =========================
+# CHARTS
+# =========================
+class MonthlyExpenseDTO(BaseModel):
+    month: str
+    total: float
 
 class CategorySpendingDTO(BaseModel):
     category: str
     total: float
 
-
 class SupplierSpendingDTO(BaseModel):
     supplier: str
     total: float
 
+class TopProductDTO(BaseModel):
+    product: str
+    quantity: int
 
+
+# =========================
+# TABLES
+# =========================
 class RecentPurchaseDTO(BaseModel):
     id: UUID
     supplier: str
@@ -32,21 +61,19 @@ class LowStockProductDTO(BaseModel):
     name: str
     current_stock: int
     minimum_stock: int
+    missing_stock: int
 
 
-class DashboardCountsDTO(BaseModel):
-    amount_purchases: int
-    amount_products: int
-    amount_suppliers: int
-    low_stock_count: int
-    total_pending: float
-
-
+# =========================
+# RESPONSE PRINCIPAL
+# =========================
 class DashboardSummaryDTO(BaseModel):
     year: int
     counts: DashboardCountsDTO
-    expenses_per_month: ExpensesPerMonthDTO
+    kpis: DashboardKPIDTO
+    monthly_expenses: list[MonthlyExpenseDTO]
     spending_by_category: list[CategorySpendingDTO]
     top_suppliers: list[SupplierSpendingDTO]
+    top_products: list[TopProductDTO]
     recent_purchases: list[RecentPurchaseDTO]
     low_stock_products: list[LowStockProductDTO]

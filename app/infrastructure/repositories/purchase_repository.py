@@ -16,11 +16,11 @@ from app.domain.enums.purchase_status import PurchaseStatus
 from app.domain.repositories.purchase_repository import PurchaseRepository
 
 
-
 class SqlAlchemyPurchaseRepository(
     SqlAlchemyBaseRepository[Purchase, PurchaseModel],
     PurchaseRepository
 ):
+
     def __init__(self, session: AsyncSession):
         super().__init__(
             session=session,
@@ -30,77 +30,135 @@ class SqlAlchemyPurchaseRepository(
         )
 
 
-    async def get_detail(self, purchase_id: UUID) -> Purchase | None:
+    async def get_detail_model(self, purchase_id: UUID) -> PurchaseModel | None:
         stmt = (
             select(PurchaseModel)
             .where(PurchaseModel.id == purchase_id)
             .options(
                 joinedload(PurchaseModel.supplier),
                 joinedload(PurchaseModel.items)
-                    .joinedload(PurchaseItemModel.product)
-                    .joinedload(ProductModel.category),
+                .joinedload(PurchaseItemModel.product)
+                .joinedload(ProductModel.brand),
                 joinedload(PurchaseModel.items)
-                    .joinedload(PurchaseItemModel.product)
-                    .joinedload(ProductModel.brand),
+                .joinedload(PurchaseItemModel.product)
+                .joinedload(ProductModel.category)
             )
         )
 
         result = await self.session.execute(stmt)
-        purchase = result.unique().scalar_one_or_none()
 
-        return self.to_domain(purchase) if purchase else None
+        return result.unique().scalar_one_or_none()
 
-    # ── Métodos de reporte (dashboard) ──────────────────────────────────────
-    # Devuelven el modelo ORM directamente (PurchaseModel), no la entidad de
-    # dominio, porque necesitan relaciones (supplier, items, product,
-    # category) que la entidad de dominio no representa. Son consultas de
-    # solo lectura para reportes, no participan en el ciclo de vida del
-    # agregado de dominio.
+
+    async def get_confirmed_by_year(self, year: int) -> list[PurchaseModel]:
+        stmt = (
+            select(PurchaseModel)
+            .where(
+                extract("year", PurchaseModel.purchase_date) == year,
+                PurchaseModel.status == PurchaseStatus.CONFIRMED
+            )
+            .options(
+                joinedload(PurchaseModel.supplier),
+                joinedload(PurchaseModel.items)
+                .joinedload(PurchaseItemModel.product)
+                .joinedload(ProductModel.category)
+            )
+        )
+
+        result = await self.session.execute(stmt)
+
+        return list(result.unique().scalars().all())
+
+
+    async def count_confirmed_by_year(self, year: int) -> int:
+        stmt = (
+            select(func.count())
+            .select_from(PurchaseModel)
+            .where(
+                extract("year", PurchaseModel.purchase_date) == year,
+                PurchaseModel.status == PurchaseStatus.CONFIRMED
+            )
+        )
+
+        result = await self.session.execute(stmt)
+
+        return result.scalar_one()
+
 
     async def get_recent(self, limit: int) -> list[PurchaseModel]:
         stmt = (
             select(PurchaseModel)
-            .options(joinedload(PurchaseModel.supplier))
-            .order_by(PurchaseModel.purchase_date.desc())
+            .where(
+                PurchaseModel.status == PurchaseStatus.CONFIRMED
+            )
+            .options(
+                joinedload(PurchaseModel.supplier),
+                joinedload(PurchaseModel.items)
+                .joinedload(PurchaseItemModel.product)
+            )
+            .order_by(
+                PurchaseModel.purchase_date.desc()
+            )
             .limit(limit)
         )
 
         result = await self.session.execute(stmt)
+
         return list(result.unique().scalars().all())
+
+
+    async def count_by_year(self, year: int) -> int:
+        stmt = (
+            select(func.count())
+            .select_from(PurchaseModel)
+            .where(
+                extract("year", PurchaseModel.purchase_date) == year
+            )
+        )
+
+        result = await self.session.execute(stmt)
+
+        return result.scalar_one()
 
 
     async def get_purchases_by_year(self, year: int) -> list[PurchaseModel]:
         stmt = (
             select(PurchaseModel)
-            .where(extract("year", PurchaseModel.purchase_date) == year)
+            .where(
+                extract("year", PurchaseModel.purchase_date) == year
+            )
             .options(
                 joinedload(PurchaseModel.supplier),
                 joinedload(PurchaseModel.items)
-                    .joinedload(PurchaseItemModel.product)
-                    .joinedload(ProductModel.category),
+                .joinedload(PurchaseItemModel.product)
+                .joinedload(ProductModel.category)
             )
         )
 
         result = await self.session.execute(stmt)
+
         return list(result.unique().scalars().all())
 
 
-    async def count_by_year(self, year: int) -> int:
-        stmt = select(func.count()).where(
-            extract("year", PurchaseModel.purchase_date) == year
-        ).select_from(PurchaseModel)
+    async def get_total_by_status_and_year(
+        self,
+        year: int,
+        status: PurchaseStatus
+    ) -> float:
 
-        result = await self.session.execute(stmt)
-        return result.scalar_one()
-
-
-    async def get_total_by_status_and_year(self, year: int, status: PurchaseStatus) -> float:
-        stmt = select(
-            func.coalesce(func.sum(PurchaseModel.total_amount), 0)
-        ).where(
-            extract("year", PurchaseModel.purchase_date) == year,
-            PurchaseModel.status == status,
+        stmt = (
+            select(
+                func.coalesce(
+                    func.sum(PurchaseModel.total_amount),
+                    0
+                )
+            )
+            .where(
+                extract("year", PurchaseModel.purchase_date) == year,
+                PurchaseModel.status == status
+            )
         )
 
         result = await self.session.execute(stmt)
+
         return float(result.scalar_one())
