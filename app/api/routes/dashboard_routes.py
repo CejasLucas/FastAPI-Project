@@ -7,7 +7,7 @@ from app.infrastructure.repositories.product_repository import SqlAlchemyProduct
 from app.infrastructure.repositories.supplier_repository import SqlAlchemySupplierRepository
 
 from app.api.dtos.dashboard_dto import DashboardSummaryDTO
-from app.domain.services.dashboard_service import DashboardService
+from app.api.services.dashboard_service import DashboardService
 
 
 router = APIRouter(prefix="/dashboard", tags=["Dashboard"])

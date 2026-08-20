@@ -2,12 +2,14 @@ from uuid import UUID
 from sqlalchemy.ext.asyncio import AsyncSession
 from fastapi import APIRouter, Depends, HTTPException
 
-from domain.enums.pruduct_unit import Unit
+from app.domain.enums.pruduct_unit import Unit
 from app.domain.entities.product import  Product
-from app.api.dtos.product_dto import ProductCreateDTO, ProductUpdateDTO
 
 from app.infrastructure.database.session import get_session
 from app.infrastructure.repositories.product_repository import SqlAlchemyProductRepository
+
+from api.services.product_service import ProductService
+from app.api.dtos.product_dto import ProductCreateDTO, ProductUpdateDTO, ProductListItemDTO
 
 router = APIRouter(prefix="/products", tags=["Products"])
 
@@ -19,6 +21,17 @@ async def get_products(
     repo = SqlAlchemyProductRepository(db)
 
     return await repo.get_all()
+
+
+@router.get("/items", response_model=list[ProductListItemDTO])
+async def get_product_items(
+    db: AsyncSession = Depends(get_session)
+):
+    repo = SqlAlchemyProductRepository(db)
+    service = ProductService(repo)
+    products = await service.get_all_for_selection()
+    return products
+
 
 @router.get("/units")
 async def get_units():
@@ -93,4 +106,3 @@ async def delete_product(
         raise HTTPException(status_code=404, detail="Product not found")
 
     await repo.delete(product_id)
-

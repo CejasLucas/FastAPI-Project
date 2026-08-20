@@ -24,3 +24,14 @@ class ProductUpdateDTO(BaseModel):
     unit: Unit = Unit.UNIT
     brand_id: UUID
     category_id: UUID
+
+
+class ProductListItemDTO(BaseModel):
+    id: UUID
+    name: str
+    unit: Unit
+    unit_price: float
+    category_id: UUID
+    category: str
+    brand_id: UUID
+    brand: str

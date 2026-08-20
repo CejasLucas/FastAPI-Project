@@ -2,8 +2,8 @@ from uuid import UUID
 from sqlalchemy.ext.asyncio import AsyncSession
 from fastapi import APIRouter, Depends, HTTPException
 
-from api.dtos.purchase_dto import PurchaseDetailDTO
-from domain.services.purchase_service import PurchaseService
+from app.api.services.purchase_service import PurchaseService
+from app.api.dtos.purchase_dto import PurchaseDetailDTO
 
 from app.infrastructure.database.session import get_session
 from app.infrastructure.repositories.purchase_repository import SqlAlchemyPurchaseRepository

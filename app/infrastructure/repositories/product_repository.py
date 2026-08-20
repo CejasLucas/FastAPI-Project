@@ -1,4 +1,5 @@
 from sqlalchemy import select
+from sqlalchemy.orm import joinedload
 
 from app.domain.entities.product import Product
 from app.domain.repositories.product_repository import ProductRepository
@@ -23,7 +24,6 @@ class SqlAlchemyProductRepository(
             to_model=to_model
         )
 
-
     async def get_low_stock(self, limit: int) -> list[Product]:
         stmt = (
             select(ProductModel)
@@ -35,8 +35,19 @@ class SqlAlchemyProductRepository(
             )
             .limit(limit)
         )
-
         result = await self.session.execute(stmt)
         products = result.scalars().all()
-
         return [self.to_domain(product) for product in products]
+
+
+    async def get_all_with_details(self) -> list[ProductModel]:
+        stmt = (
+            select(ProductModel)
+            .options(
+                joinedload(ProductModel.brand),
+                joinedload(ProductModel.category),
+            )
+            .order_by(ProductModel.name)
+        )
+        result = await self.session.execute(stmt)
+        return list(result.unique().scalars().all())
