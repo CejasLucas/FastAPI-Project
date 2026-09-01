@@ -1,84 +1,41 @@
 from uuid import UUID
 from sqlalchemy.ext.asyncio import AsyncSession
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends
 
-from app.domain.entities.category import Category
-from app.api.dtos.category_dto import CategoryCreateDTO, CategoryUpdateDTO
+from app.api.dtos.category_dto import CategoryDTO, CategoryCreateDTO, CategoryUpdateDTO
+from app.api.services.category_service import CategoryService
 
 from app.infrastructure.database.session import get_session
 from app.infrastructure.repositories.category_repository import SqlAlchemyCategoryRepository
 
 router = APIRouter(prefix="/categories", tags=["Categories"])
 
-@router.get("/")
-async def get_categories(
-    db: AsyncSession = Depends(get_session)
-):
-    repo = SqlAlchemyCategoryRepository(db)
 
-    return await repo.get_all()
+@router.get("/", response_model=list[CategoryDTO])
+async def get_categories(db: AsyncSession = Depends(get_session)):
+    service = CategoryService(SqlAlchemyCategoryRepository(db))
+    return await service.get_all()
 
 
-@router.get("/{category_id}")
-async def get_category(
-        category_id: UUID,
-        db: AsyncSession = Depends(get_session)
-):
-    repo = SqlAlchemyCategoryRepository(db)
-
-    category = await repo.get_by_id(category_id)
-
-    if category is None:
-        raise HTTPException(status_code=404, detail="Category not found")
-
-    return category
+@router.get("/{category_id}", response_model=CategoryDTO)
+async def get_category(category_id: UUID, db: AsyncSession = Depends(get_session)):
+    service = CategoryService(SqlAlchemyCategoryRepository(db))
+    return await service.get_by_id(category_id)
 
 
-@router.post("/", status_code=201)
-async def create_category(
-    body: CategoryCreateDTO,
-    db: AsyncSession = Depends(get_session)
-):
-    repo = SqlAlchemyCategoryRepository(db)
-
-    category = Category(
-        id=None,
-        **body.model_dump()
-    )
-
-    return await repo.create(category)
+@router.post("/", response_model=CategoryDTO, status_code=201)
+async def create_category(body: CategoryCreateDTO, db: AsyncSession = Depends(get_session)):
+    service = CategoryService(SqlAlchemyCategoryRepository(db))
+    return await service.create(body)
 
 
-@router.put("/{category_id}")
-async def update_category(
-    category_id: UUID,
-    body: CategoryUpdateDTO,
-    db: AsyncSession = Depends(get_session)
-):
-    repo = SqlAlchemyCategoryRepository(db)
-
-    existing = await repo.get_by_id(category_id)
-    if existing is None:
-        raise HTTPException(status_code=404, detail="Category not found")
-
-    updated_data = existing.__dict__ | {
-        k: v for k, v in body.model_dump().items() if v is not None
-    }
-
-    updated_category = Category(**updated_data)
-
-    return await repo.update(updated_category)
+@router.put("/{category_id}", response_model=CategoryDTO)
+async def update_category(category_id: UUID, body: CategoryUpdateDTO, db: AsyncSession = Depends(get_session)):
+    service = CategoryService(SqlAlchemyCategoryRepository(db))
+    return await service.update(category_id, body)
 
 
 @router.delete("/{category_id}", status_code=204)
-async def delete_category(
-    category_id: UUID,
-    db: AsyncSession = Depends(get_session)
-):
-    repo = SqlAlchemyCategoryRepository(db)
-
-    existing = await repo.get_by_id(category_id)
-    if existing is None:
-        raise HTTPException(status_code=404, detail="Category not found")
-
-    await repo.delete(category_id)
+async def delete_category(category_id: UUID, db: AsyncSession = Depends(get_session)):
+    service = CategoryService(SqlAlchemyCategoryRepository(db))
+    await service.delete(category_id)

@@ -1,10 +1,19 @@
-from pydantic import BaseModel
+from uuid import UUID
+from pydantic import BaseModel, ConfigDict
 
-# ── Schemas ────────────────────────────────────────────────────────────────────
+
 class CategoryCreateDTO(BaseModel):
     name: str
     description: str
 
+
 class CategoryUpdateDTO(BaseModel):
     name: str | None = None
     description: str | None = None
+
+
+class CategoryDTO(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+    id: UUID
+    name: str
+    description: str

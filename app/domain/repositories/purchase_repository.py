@@ -1,11 +1,14 @@
+from abc import ABC
 from uuid import UUID
+from datetime import datetime
+
 from app.domain.entities.purchase import Purchase
+from app.domain.enums.purchase_status import PurchaseStatus
 from app.domain.repositories.base_repository import BaseRepository
-from domain.enums.purchase_status import PurchaseStatus
 
 
 # CRUD
-class PurchaseRepository(BaseRepository[Purchase]):
+class PurchaseRepository(BaseRepository[Purchase], ABC):
 
     async def get_recent(self, limit: int) -> list[Purchase]:
         ...
@@ -26,4 +29,32 @@ class PurchaseRepository(BaseRepository[Purchase]):
         ...
 
     async def get_confirmed_by_year(self, year: int):
+        ...
+
+    async def get_all_with_details(self) -> list:
+        ...
+
+    async def get_model_with_items(self, purchase_id: UUID):
+        ...
+
+    async def create_full(
+        self,
+        supplier_id: UUID,
+        purchase_date: datetime,
+        status: PurchaseStatus,
+        items: list[dict],
+    ):
+        ...
+
+    async def update_full(
+        self,
+        purchase_id: UUID,
+        supplier_id: UUID,
+        purchase_date: datetime,
+        status: PurchaseStatus,
+        items: list[dict],
+    ):
+        ...
+
+    async def delete_by_id(self, purchase_id: UUID) -> bool:
         ...

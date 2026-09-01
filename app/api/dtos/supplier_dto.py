@@ -1,6 +1,7 @@
-from pydantic import BaseModel, EmailStr
+from uuid import UUID
+from pydantic import BaseModel, EmailStr, ConfigDict
 
-# ── Schemas ────────────────────────────────────────────────────────────────────
+
 class SupplierCreateDTO(BaseModel):
     name: str
     email: EmailStr
@@ -10,6 +11,7 @@ class SupplierCreateDTO(BaseModel):
     nationality: str
     tax_id: str
 
+
 class SupplierUpdateDTO(BaseModel):
     name: str | None = None
     email: EmailStr | None = None
@@ -18,3 +20,15 @@ class SupplierUpdateDTO(BaseModel):
     locality: str | None = None
     nationality: str | None = None
     tax_id: str | None = None
+
+
+class SupplierDTO(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+    id: UUID
+    name: str
+    email: str
+    phone: str
+    address: str
+    locality: str
+    nationality: str
+    tax_id: str

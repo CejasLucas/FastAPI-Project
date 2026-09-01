@@ -1,4 +1,5 @@
 from datetime import datetime
+
 from app.api.dtos.dashboard_dto import (
     DashboardSummaryDTO,
     DashboardCountsDTO,
@@ -12,27 +13,21 @@ from app.api.dtos.dashboard_dto import (
 )
 
 
-def _status_value(status)->str:
-    return status.value if hasattr(status,"value") else status
-
-
 class DashboardService:
 
-    def __init__(self,supplier_repo,product_repo,purchase_repo):
-        self.supplier_repository=supplier_repo
-        self.product_repository=product_repo
-        self.purchase_repository=purchase_repo
+    def __init__(self, supplier_repo, product_repo, purchase_repo):
+        self.supplier_repository = supplier_repo
+        self.product_repository = product_repo
+        self.purchase_repository = purchase_repo
 
-
-    async def get_summary(self,year:int=2026)->DashboardSummaryDTO:
-
-        purchases=await self.purchase_repository.get_confirmed_by_year(year)
+    async def get_summary(self, year: int = datetime.now().year) -> DashboardSummaryDTO:
+        purchases = await self.purchase_repository.get_confirmed_by_year(year)
 
         return DashboardSummaryDTO(
             year=year,
             counts=await self.get_counts(purchases),
             kpis=await self.get_kpis(purchases),
-            monthly_expenses=self.get_monthly_expenses(purchases),
+            monthly_expenses=self.get_monthly_expenses(purchases, year),
             spending_by_category=self.get_spending_by_category(purchases),
             top_suppliers=self.get_top_suppliers(purchases),
             top_products=self.get_top_products(purchases),
@@ -40,11 +35,8 @@ class DashboardService:
             low_stock_products=await self.get_low_stock_products()
         )
 
-
-    async def get_counts(self,purchases):
-
-        low_stock=await self.product_repository.get_low_stock(limit=100)
-
+    async def get_counts(self, purchases) -> DashboardCountsDTO:
+        low_stock = await self.product_repository.get_low_stock(limit=100)
 
         return DashboardCountsDTO(
             amount_purchases=len(purchases),
@@ -54,9 +46,7 @@ class DashboardService:
             total_spent=sum(float(p.total_amount) for p in purchases)
         )
 
-
-    async def get_kpis(self,purchases):
-
+    async def get_kpis(self, purchases) -> DashboardKPIDTO:
         if not purchases:
             return DashboardKPIDTO(
                 average_purchase=0,
@@ -66,210 +56,114 @@ class DashboardService:
                 monthly_growth_percentage=0
             )
 
+        amounts = [float(p.total_amount) for p in purchases]
 
-        amounts=[
-            float(p.total_amount)
-            for p in purchases
-        ]
+        now = datetime.now()
+        previous_month = 12 if now.month == 1 else now.month - 1
 
+        current = [p for p in purchases if p.purchase_date.month == now.month]
+        previous = [p for p in purchases if p.purchase_date.month == previous_month]
 
-        now=datetime.now()
+        current_total = sum(float(p.total_amount) for p in current)
+        previous_total = sum(float(p.total_amount) for p in previous)
 
-
-        current=[
-            p for p in purchases
-            if p.purchase_date.month==now.month
-        ]
-
-
-        previous=[
-            p for p in purchases
-            if p.purchase_date.month==now.month-1
-        ]
-
-
-        current_total=sum(
-            float(p.total_amount)
-            for p in current
-        )
-
-
-        previous_total=sum(
-            float(p.total_amount)
-            for p in previous
-        )
-
-
-        growth=0
-
-        if previous_total>0:
-            growth=((current_total-previous_total)/previous_total)*100
-
+        growth = 0
+        if previous_total > 0:
+            growth = ((current_total - previous_total) / previous_total) * 100
 
         return DashboardKPIDTO(
-            average_purchase=sum(amounts)/len(amounts),
+            average_purchase=sum(amounts) / len(amounts),
             largest_purchase=max(amounts),
             purchases_this_month=len(current),
             spending_this_month=current_total,
             monthly_growth_percentage=growth
         )
 
-
-    def get_monthly_expenses(self,purchases):
-
-        months={}
-
+    def get_monthly_expenses(self, purchases, year: int) -> list[MonthlyExpenseDTO]:
+        months = {}
 
         for purchase in purchases:
-
-            month=purchase.purchase_date.month
-
-            months[month]=(
-                months.get(month,0)
-                +
-                float(purchase.total_amount)
-            )
-
+            month = purchase.purchase_date.month
+            months[month] = months.get(month, 0) + float(purchase.total_amount)
 
         return [
             MonthlyExpenseDTO(
-                month=datetime(2026,month,1).strftime("%b"),
+                month=datetime(year, month, 1).strftime("%b"),
                 total=total
             )
-            for month,total in sorted(months.items())
+            for month, total in sorted(months.items())
         ]
 
-
-    def get_spending_by_category(self,purchases,limit=5):
-
-        totals={}
-
+    def get_spending_by_category(self, purchases, limit=5) -> list[CategorySpendingDTO]:
+        totals = {}
 
         for purchase in purchases:
-
             for item in purchase.items:
-
-                category=(
+                category = (
                     item.product.category.name
                     if item.product.category
                     else "Sin categoría"
                 )
 
-                subtotal=float(item.quantity)*float(item.unit_price)
+                subtotal = float(item.quantity) * float(item.unit_price)
 
-                totals[category]=(
-                    totals.get(category,0)
-                    +
-                    subtotal
-                )
+                totals[category] = totals.get(category, 0) + subtotal
 
-
-        result=sorted(
-            totals.items(),
-            key=lambda x:x[1],
-            reverse=True
-        )[:limit]
-
+        result = sorted(totals.items(), key=lambda x: x[1], reverse=True)[:limit]
 
         return [
-            CategorySpendingDTO(
-                category=name,
-                total=value
-            )
-            for name,value in result
+            CategorySpendingDTO(category=name, total=value)
+            for name, value in result
         ]
 
-
-    def get_top_suppliers(self,purchases,limit=5):
-
-        totals={}
-
+    def get_top_suppliers(self, purchases, limit=5) -> list[SupplierSpendingDTO]:
+        totals = {}
 
         for purchase in purchases:
-
             if not purchase.supplier:
                 continue
 
-            name=purchase.supplier.name
+            name = purchase.supplier.name
+            totals[name] = totals.get(name, 0) + float(purchase.total_amount)
 
-            totals[name]=(
-                totals.get(name,0)
-                +
-                float(purchase.total_amount)
-            )
-
-
-        result=sorted(
-            totals.items(),
-            key=lambda x:x[1],
-            reverse=True
-        )[:limit]
-
+        result = sorted(totals.items(), key=lambda x: x[1], reverse=True)[:limit]
 
         return [
-            SupplierSpendingDTO(
-                supplier=name,
-                total=value
-            )
-            for name,value in result
+            SupplierSpendingDTO(supplier=name, total=value)
+            for name, value in result
         ]
 
-
-    def get_top_products(self,purchases,limit=5):
-
-        products={}
-
+    def get_top_products(self, purchases, limit=5) -> list[TopProductDTO]:
+        products = {}
 
         for purchase in purchases:
-
             for item in purchase.items:
+                name = item.product.name
+                products[name] = products.get(name, 0) + int(item.quantity)
 
-                name=item.product.name
-
-                products[name]=(
-                    products.get(name,0)
-                    +
-                    int(item.quantity)
-                )
-
-
-        result=sorted(
-            products.items(),
-            key=lambda x:x[1],
-            reverse=True
-        )[:limit]
-
+        result = sorted(products.items(), key=lambda x: x[1], reverse=True)[:limit]
 
         return [
-            TopProductDTO(
-                product=name,
-                quantity=value
-            )
-            for name,value in result
+            TopProductDTO(product=name, quantity=value)
+            for name, value in result
         ]
 
-
-    async def get_recent_purchases(self,limit=12):
-
-        purchases=await self.purchase_repository.get_recent(limit)
-
+    async def get_recent_purchases(self, limit=12) -> list[RecentPurchaseDTO]:
+        purchases = await self.purchase_repository.get_recent(limit)
 
         return [
             RecentPurchaseDTO(
                 id=p.id,
                 supplier=p.supplier.name if p.supplier else "Sin proveedor",
                 purchase_date=p.purchase_date,
-                status=_status_value(p.status),
+                status=p.status.value,
                 total_amount=float(p.total_amount)
             )
             for p in purchases
         ]
 
-
-    async def get_low_stock_products(self,limit=10):
-
-        products=await self.product_repository.get_low_stock(limit)
-
+    async def get_low_stock_products(self, limit=10) -> list[LowStockProductDTO]:
+        products = await self.product_repository.get_low_stock(limit)
 
         return [
             LowStockProductDTO(
@@ -277,10 +171,7 @@ class DashboardService:
                 name=p.name,
                 current_stock=p.current_stock,
                 minimum_stock=p.minimum_stock,
-                missing_stock=max(
-                    p.minimum_stock-p.current_stock,
-                    0
-                )
+                missing_stock=max(p.minimum_stock - p.current_stock, 0)
             )
             for p in products
         ]

@@ -8,7 +8,6 @@ from sqlalchemy import DateTime, ForeignKey, Enum, Numeric, func
 
 from app.infrastructure.database.base import Base
 from app.domain.enums.purchase_status import PurchaseStatus
-from app.infrastructure.database.models.document_model import DocumentModel
 
 
 class PurchaseModel(Base):
@@ -47,11 +46,6 @@ class PurchaseModel(Base):
         server_default=func.now()
     )
 
-    documents: Mapped[list[DocumentModel]] = relationship(
-        "DocumentModel",
-        back_populates="purchase",
-        cascade="all, delete-orphan"
-    )
 
     # ── Create objects ────────────────────────────────────────────────────────────────────
     supplier = relationship(

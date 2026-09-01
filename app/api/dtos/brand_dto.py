@@ -1,12 +1,22 @@
-from pydantic import BaseModel
+from uuid import UUID
+from pydantic import BaseModel, ConfigDict
 
-# ── Schemas ────────────────────────────────────────────────────────────────────
+
 class BrandCreateDTO(BaseModel):
     name: str
-    nationality: str
     active: bool = True
+    nationality: str
+
 
 class BrandUpdateDTO(BaseModel):
     name: str | None = None
-    nationality: str | None = None
     active: bool | None = None
+    nationality: str | None = None
+
+
+class BrandDTO(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+    id: UUID
+    name: str
+    active: bool
+    nationality: str
